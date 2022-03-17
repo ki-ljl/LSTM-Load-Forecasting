@@ -115,6 +115,6 @@ def test(name, b):
 
 if __name__ == '__main__':
     name = 'anqiudata.csv'
-    B = 5
+    B = 50
     LSTM_train(name, B)
     test(name, B)

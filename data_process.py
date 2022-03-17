@@ -49,7 +49,8 @@ def nn_seq(file_name, B):
         train_label = []
         for j in range(i, i + 24):
             train_seq.append(load[j])
-
+        # for c in range(2, 8):
+        #     train_seq.append(data[i + 24][c])
         train_label.append(load[i + 24])
         train_seq = torch.FloatTensor(train_seq).view(-1)
         train_label = torch.FloatTensor(train_label).view(-1)
