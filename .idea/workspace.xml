@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="216264b3-a258-4e66-9c7e-c2f25653a755" name="默认更改列表" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LSTM.py" beforeDir="false" afterPath="$PROJECT_DIR$/LSTM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/LSTM.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/model/LSTM.pkl" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -91,6 +88,8 @@
       <workItem from="1646136333605" duration="3925000" />
       <workItem from="1646140648844" duration="2044000" />
       <workItem from="1647528483518" duration="796000" />
+      <workItem from="1647530044929" duration="789000" />
+      <workItem from="1647572333995" duration="1210000" />
     </task>
     <servers />
   </component>
