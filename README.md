@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/LSTM-Load%20Forecasting-blue)
+![](https://img.shields.io/badge/LSTM-Load%20Forecasting-red)
 # LSTM-Load-Forecasting
 Implementation of Electric Load Forecasting Based on LSTM. Including univariate forecasting and multivariate forecasting.
 
