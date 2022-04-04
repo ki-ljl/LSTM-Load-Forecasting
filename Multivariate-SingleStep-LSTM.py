@@ -2,7 +2,7 @@
 """
 @Time ： 2022/1/18 14:27
 @Author ：KI 
-@File ：Multivariate-LSTM.py
+@File ：Multivariate-SingleStep-LSTM.py
 @Motto：Hungry And Humble
 
 """
@@ -18,12 +18,12 @@ import matplotlib.pyplot as plt
 
 MAX, MIN = 0, 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-LSTM_PATH = 'model/LSTM.pkl'
+LSTM_PATH = 'model/Multivariate-SingleStep-LSTM.pkl'
 
 
 def load_data(file_name):
     global MAX, MIN
-    df = pd.read_csv(os.path.dirname(os.getcwd()) + '/data/new_data/' + file_name, encoding='gbk')
+    df = pd.read_csv('data/' + file_name, encoding='gbk')
     columns = df.columns
     df.fillna(df.mean(), inplace=True)
     MAX = np.max(df[columns[1]])
@@ -121,7 +121,6 @@ def LSTM_train(name, b):
     epochs = 30
     for i in range(epochs):
         cnt = 0
-        print('当前', i)
         for (seq, label) in Dtr:
             cnt += 1
             seq = seq.to(device)
@@ -169,7 +168,7 @@ def test(name, b):
     y, pred = np.array([y]), np.array([pred])
     y = (MAX - MIN) * y + MIN
     pred = (MAX - MIN) * pred + MIN
-    print('accuracy:', get_mape(y, pred))
+    print('mape:', get_mape(y, pred))
     # plot
     x = [i for i in range(1, 151)]
     x_smooth = np.linspace(np.min(x), np.max(x), 900)
