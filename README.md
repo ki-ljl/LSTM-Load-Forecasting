@@ -8,13 +8,17 @@ pytorch==1.10.1+cu111
 numpy==1.18.5
 
 # Usage
-Univariate forecasting:
+Univariate-SingleStep forecasting:
 ```python
-python LSTM.py
+python Univariate-SingleStep-LSTM.py
 ```
-Multivariate forecasting:
+Multivariate-SingleStep forecasting:
 ```python
-python Multivariate-LSTM.py
+python Multivariate-SingleStep-LSTM.py
+```
+Multivariate-MultiStep forecasting:
+```python
+python Multivariate-MultiStep-LSTM.py
 ```
 
 # Result
