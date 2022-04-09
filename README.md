@@ -7,6 +7,8 @@ pytorch==1.10.1+cu111
 
 numpy==1.18.5
 
+pandas==1.2.3
+
 # Usage
 Univariate-SingleStep forecasting:
 ```python
