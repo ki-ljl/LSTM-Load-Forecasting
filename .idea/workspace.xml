@@ -40,7 +40,7 @@
       <recent name="E:\GitHub\LSTM-Load-Forecasting" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Multivariate-MultiStep-LSTM">
+  <component name="RunManager" selected="Python.Univariate-SingleStep-LSTM">
     <configuration name="LSTM" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="LSTM-Load-Forecasting" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,9 +131,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Univariate-SingleStep-LSTM" />
         <item itemvalue="Python.Multivariate-MultiStep-LSTM" />
         <item itemvalue="Python.Multivariate-SingleStep-LSTM" />
-        <item itemvalue="Python.Univariate-SingleStep-LSTM" />
         <item itemvalue="Python.LSTM" />
       </list>
     </recent_temporary>
@@ -156,6 +156,9 @@
       <workItem from="1647572333995" duration="1210000" />
       <workItem from="1649087179991" duration="806000" />
       <workItem from="1649088002551" duration="75000" />
+      <workItem from="1649385667561" duration="1055000" />
+      <workItem from="1649472513046" duration="419000" />
+      <workItem from="1649558175097" duration="109000" />
     </task>
     <servers />
   </component>
@@ -177,6 +180,6 @@
     <SUITE FILE_PATH="coverage/LSTM_Load_Forecasting$LSTM.coverage" NAME="LSTM Coverage Results" MODIFIED="1647529253075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LSTM_Load_Forecasting$Multivariate_MultiStep_LSTM.coverage" NAME="Multivariate-MultiStep-LSTM Coverage Results" MODIFIED="1649088030960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LSTM_Load_Forecasting$Multivariate_SingleStep_LSTM.coverage" NAME="Multivariate-SingleStep-LSTM Coverage Results" MODIFIED="1649087754788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LSTM_Load_Forecasting$Univariate_SingleStep_LSTM.coverage" NAME="Univariate-SingleStep-LSTM Coverage Results" MODIFIED="1649087732788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/LSTM_Load_Forecasting$Univariate_SingleStep_LSTM.coverage" NAME="Univariate-SingleStep-LSTM Coverage Results" MODIFIED="1649386077398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

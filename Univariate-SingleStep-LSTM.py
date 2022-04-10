@@ -15,6 +15,9 @@ import torch.nn as nn
 from scipy.interpolate import make_interp_spline
 
 from data_process import nn_seq, device, get_mape
+from data_process import setup_seed
+
+setup_seed(20)
 LSTM_PATH = 'model/Univariate-SingleStep-LSTM.pkl'
 
 

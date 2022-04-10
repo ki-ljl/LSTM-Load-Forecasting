@@ -14,7 +14,9 @@ from scipy.interpolate import make_interp_spline
 from torch.utils.data import Dataset, DataLoader
 from itertools import chain
 import matplotlib.pyplot as plt
+from data_process import setup_seed
 
+setup_seed(20)
 MAX, MIN = 0, 0
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LSTM_PATH = 'model/Multivariate-MultiStep_LSTM.pkl'

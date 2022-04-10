@@ -5,6 +5,9 @@
 @File: data_process.py
 @Motto: Hungry And Humble
 """
+import os
+import random
+
 import numpy as np
 import pandas as pd
 import torch
@@ -12,6 +15,15 @@ from torch.utils.data import Dataset, DataLoader
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 LSTM_PATH = 'model/LSTM.pkl'
+
+
+def setup_seed(seed):
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.backends.cudnn.deterministic = True
 
 
 def load_data(file_name):
