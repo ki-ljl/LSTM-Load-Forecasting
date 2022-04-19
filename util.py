@@ -12,7 +12,7 @@ from scipy.interpolate import make_interp_spline
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
-from models import LSTM
+from models import LSTM, BiLSTM
 from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed
 setup_seed(20)
 
@@ -24,9 +24,13 @@ def train(args, path, flag):
         Dtr, Dte, m, n = nn_seq_ms(B=args.batch_size)
     else:
         Dtr, Dte, m, n = nn_seq_mm(B=args.batch_size, num=args.output_size)
+
     input_size, hidden_size, num_layers = args.input_size, args.hidden_size, args.num_layers
     output_size = args.output_size
-    model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    if args.bidirectional:
+        model = BiLSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    else:
+        model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
 
     loss_function = nn.MSELoss().to(device)
     if args.optimizer == 'adam':
@@ -49,6 +53,7 @@ def train(args, path, flag):
             optimizer.step()
             if cnt % 100 == 0:
                 print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
+
     state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict()}
     torch.save(state, path)
 
@@ -65,7 +70,11 @@ def test(args, path, flag):
     print('loading model...')
     input_size, hidden_size, num_layers = args.input_size, args.hidden_size, args.num_layers
     output_size = args.output_size
-    model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    if args.bidirectional:
+        model = BiLSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    else:
+        model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    # model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
     model.load_state_dict(torch.load(path)['model'])
     model.eval()
     print('predicting...')

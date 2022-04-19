@@ -6,7 +6,6 @@
 @Motto：Hungry And Humble
 
 """
-import torch
 from args import ms_args_parser
 from util import train, test
 
