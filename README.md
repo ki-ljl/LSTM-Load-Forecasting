@@ -1,6 +1,6 @@
 ![](https://img.shields.io/badge/LSTM-Load%20Forecasting-red)
 # LSTM-Load-Forecasting
-Implementation of Electric Load Forecasting Based on LSTM. Including Univariate-SingleStep forecasting, Multivariate-SingleStep forecasting and Multivariate-MultiStep forecasting.
+Implementation of Electric Load Forecasting Based on LSTM(BiLSTM). Including Univariate-SingleStep forecasting, Multivariate-SingleStep forecasting and Multivariate-MultiStep forecasting.
 
 # Environment
 pytorch==1.10.1+cu111
