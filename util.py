@@ -40,6 +40,7 @@ def train(args, path, flag):
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr,
                                     momentum=0.9, weight_decay=args.weight_decay)
     # training
+    loss = 0
     for i in range(args.epochs):
         cnt = 0
         for (seq, label) in Dtr:
@@ -51,8 +52,9 @@ def train(args, path, flag):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            if cnt % 100 == 0:
-                print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
+            # if cnt % 100 == 0:
+            #     print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
+        print('epoch', i, ':', loss.item())
 
     state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict()}
     torch.save(state, path)
