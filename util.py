@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from models import LSTM, BiLSTM
 from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed
+
 setup_seed(20)
 
 

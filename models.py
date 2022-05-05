@@ -7,6 +7,7 @@
 """
 from torch import nn
 import torch
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -38,6 +39,7 @@ class LSTM(nn.Module):
         # print('pred=', pred.shape)
         pred = pred.view(self.batch_size, seq_len, -1)
         pred = pred[:, -1, :]
+
         return pred
 
 
@@ -69,4 +71,5 @@ class BiLSTM(nn.Module):
         # print('pred=', pred.shape)
         pred = pred.view(self.batch_size, seq_len, -1)
         pred = pred[:, -1, :]
+
         return pred

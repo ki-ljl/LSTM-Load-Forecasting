@@ -26,6 +26,9 @@ def setup_seed(seed):
 
 
 def load_data():
+    """
+    :return: normalized dataframe
+    """
     path = os.path.dirname(os.path.realpath(__file__)) + '/data/data.csv'
     df = pd.read_csv(path, encoding='gbk')
     columns = df.columns
@@ -48,6 +51,7 @@ class MyDataset(Dataset):
         return len(self.data)
 
 
+# Multivariate-MultiStep-LSTM data processing
 def nn_seq_mm(B, num):
     print('data processing...')
     data, m, n = load_data()
@@ -89,6 +93,7 @@ def nn_seq_mm(B, num):
     return Dtr, Dte, m, n
 
 
+# Multivariate-SingleStep-LSTM data processing
 def nn_seq_ms(B):
     print('data processing...')
     data, m, n = load_data()
@@ -125,6 +130,7 @@ def nn_seq_ms(B):
     return Dtr, Dte, m, n
 
 
+# Univariate-SingleStep-LSTM data processing
 def nn_seq(B):
     print('data processing...')
     data, m, n = load_data()
@@ -164,8 +170,8 @@ def nn_seq(B):
 
 def get_mape(x, y):
     """
-    :param x:true
-    :param y:pred
-    :return:MAPE
+    :param x: true value
+    :param y: pred value
+    :return: mape
     """
     return np.mean(np.abs((x - y) / x))
