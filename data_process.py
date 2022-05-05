@@ -51,7 +51,7 @@ class MyDataset(Dataset):
         return len(self.data)
 
 
-# Multivariate-MultiStep-LSTM data processing
+# Multivariate-MultiStep-LSTM data processing.
 def nn_seq_mm(B, num):
     print('data processing...')
     data, m, n = load_data()
@@ -93,7 +93,7 @@ def nn_seq_mm(B, num):
     return Dtr, Dte, m, n
 
 
-# Multivariate-SingleStep-LSTM data processing
+# Multivariate-SingleStep-LSTM data processing.
 def nn_seq_ms(B):
     print('data processing...')
     data, m, n = load_data()
@@ -130,7 +130,7 @@ def nn_seq_ms(B):
     return Dtr, Dte, m, n
 
 
-# Univariate-SingleStep-LSTM data processing
+# Univariate-SingleStep-LSTM data processing.
 def nn_seq(B):
     print('data processing...')
     data, m, n = load_data()
