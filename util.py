@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from models import LSTM, BiLSTM
 from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed
+from tqdm import tqdm
 
 setup_seed(20)
 
@@ -42,7 +43,7 @@ def train(args, path, flag):
                                     momentum=0.9, weight_decay=args.weight_decay)
     # training
     loss = 0
-    for i in range(args.epochs):
+    for i in tqdm(range(args.epochs)):
         cnt = 0
         for (seq, label) in Dtr:
             cnt += 1
@@ -81,7 +82,7 @@ def test(args, path, flag):
     model.load_state_dict(torch.load(path)['model'])
     model.eval()
     print('predicting...')
-    for (seq, target) in Dte:
+    for (seq, target) in tqdm(Dte):
         target = list(chain.from_iterable(target.data.tolist()))
         y.extend(target)
         seq = seq.to(device)
