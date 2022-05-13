@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from models import LSTM, BiLSTM
 from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed
 from tqdm import tqdm
+from torch.optim.lr_scheduler import StepLR
 
 setup_seed(20)
 
@@ -41,6 +42,7 @@ def train(args, path, flag):
     else:
         optimizer = torch.optim.SGD(model.parameters(), lr=args.lr,
                                     momentum=0.9, weight_decay=args.weight_decay)
+    scheduler = StepLR(optimizer, step_size=args.step_size, gamma=args.gamma)
     # training
     loss = 0
     for i in tqdm(range(args.epochs)):
@@ -57,6 +59,8 @@ def train(args, path, flag):
             # if cnt % 100 == 0:
             #     print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
         print('epoch', i, ':', loss.item())
+
+    scheduler.step()
 
     state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict()}
     torch.save(state, path)

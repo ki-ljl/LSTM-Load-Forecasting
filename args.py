@@ -24,6 +24,8 @@ def mm_args_parser():
     parser.add_argument('--device', default=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
     parser.add_argument('--bidirectional', type=bool, default=True, help='LSTM direction')
+    parser.add_argument('--step_size', type=int, default=10, help='step size')
+    parser.add_argument('--gamma', type=float, default=0.5, help='gamma')
 
     args = parser.parse_args()
 
@@ -45,6 +47,8 @@ def ms_args_parser():
     parser.add_argument('--device', default=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
     parser.add_argument('--bidirectional', type=bool, default=True, help='LSTM direction')
+    parser.add_argument('--step_size', type=int, default=10, help='step size')
+    parser.add_argument('--gamma', type=float, default=0.1, help='gamma')
 
     args = parser.parse_args()
 
@@ -66,6 +70,8 @@ def us_args_parser():
     parser.add_argument('--device', default=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
     parser.add_argument('--bidirectional', type=bool, default=False, help='LSTM direction')
+    parser.add_argument('--step_size', type=int, default=10, help='step size')
+    parser.add_argument('--gamma', type=float, default=0.5, help='gamma')
 
     args = parser.parse_args()
 
