@@ -60,7 +60,7 @@ def train(args, path, flag):
             #     print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
         print('epoch', i, ':', loss.item())
 
-    scheduler.step()
+        scheduler.step()
 
     state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict()}
     torch.save(state, path)

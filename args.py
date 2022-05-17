@@ -13,7 +13,7 @@ import torch
 def mm_args_parser():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--epochs', type=int, default=100, help='input dimension')
+    parser.add_argument('--epochs', type=int, default=50, help='input dimension')
     parser.add_argument('--input_size', type=int, default=7, help='input dimension')
     parser.add_argument('--output_size', type=int, default=4, help='output dimension')
     parser.add_argument('--hidden_size', type=int, default=64, help='hidden size')
@@ -24,7 +24,7 @@ def mm_args_parser():
     parser.add_argument('--device', default=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
     parser.add_argument('--bidirectional', type=bool, default=True, help='LSTM direction')
-    parser.add_argument('--step_size', type=int, default=10, help='step size')
+    parser.add_argument('--step_size', type=int, default=5, help='step size')
     parser.add_argument('--gamma', type=float, default=0.5, help='gamma')
 
     args = parser.parse_args()
