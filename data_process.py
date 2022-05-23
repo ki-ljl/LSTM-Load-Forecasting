@@ -143,11 +143,12 @@ def nn_seq(B):
         train_seq = []
         train_label = []
         for j in range(i, i + 24):
-            train_seq.append(load[j])
+            x = [load[j]]
+            train_seq.append(x)
         # for c in range(2, 8):
         #     train_seq.append(data[i + 24][c])
         train_label.append(load[i + 24])
-        train_seq = torch.FloatTensor(train_seq).view(-1)
+        train_seq = torch.FloatTensor(train_seq)
         train_label = torch.FloatTensor(train_label).view(-1)
         seq.append((train_seq, train_label))
     # print(seq[:5])
@@ -163,7 +164,10 @@ def nn_seq(B):
     test = MyDataset(Dte)
 
     Dtr = DataLoader(dataset=train, batch_size=B, shuffle=False, num_workers=0)
-    Dte = DataLoader(dataset=test, batch_size=B, shuffle=False, num_workers=0)
+    Dte = DataLoader(dataset=test, batch_size=1, shuffle=False, num_workers=0)
+
+    # x = [x for x in iter(Dtr)][0]
+    # print(x)
 
     return Dtr, Dte, m, n
 

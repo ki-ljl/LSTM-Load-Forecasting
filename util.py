@@ -12,8 +12,10 @@ from scipy.interpolate import make_interp_spline
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
+
 from models import LSTM, BiLSTM
-from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed
+from data_process import nn_seq, nn_seq_ms, nn_seq_mm, device, get_mape, setup_seed, MyDataset
 from tqdm import tqdm
 from torch.optim.lr_scheduler import StepLR
 
@@ -92,6 +94,71 @@ def test(args, path, flag):
         seq = seq.to(device)
         with torch.no_grad():
             y_pred = model(seq)
+            y_pred = list(chain.from_iterable(y_pred.data.tolist()))
+            pred.extend(y_pred)
+
+    y, pred = np.array(y), np.array(pred)
+    y = (m - n) * y + n
+    pred = (m - n) * pred + n
+    print('mape:', get_mape(y, pred))
+    # plot
+    x = [i for i in range(1, 151)]
+    x_smooth = np.linspace(np.min(x), np.max(x), 900)
+    y_smooth = make_interp_spline(x, y[150:300])(x_smooth)
+    plt.plot(x_smooth, y_smooth, c='green', marker='*', ms=1, alpha=0.75, label='true')
+
+    y_smooth = make_interp_spline(x, pred[150:300])(x_smooth)
+    plt.plot(x_smooth, y_smooth, c='red', marker='o', ms=1, alpha=0.75, label='pred')
+    plt.grid(axis='y')
+    plt.legend()
+    plt.show()
+
+
+def rolling_test(args, path, flag):
+    if flag == 'us':
+        Dtr, Dte, m, n = nn_seq(B=args.batch_size)
+    elif flag == 'ms':
+        Dtr, Dte, m, n = nn_seq_ms(B=args.batch_size)
+    else:
+        Dtr, Dte, m, n = nn_seq_mm(B=args.batch_size, num=args.output_size)
+    pred = []
+    y = []
+    print('loading model...')
+    input_size, hidden_size, num_layers = args.input_size, args.hidden_size, args.num_layers
+    output_size = args.output_size
+    if args.bidirectional:
+        model = BiLSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    else:
+        model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    # model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    model.load_state_dict(torch.load(path)['model'])
+    model.eval()
+    print('predicting...')
+    for batch_idx, (seq, target) in enumerate(tqdm(Dte), 0):
+        target = list(chain.from_iterable(target.data.tolist()))
+        y.extend(target)
+        if batch_idx != 0:
+            seq = seq.cpu().numpy().tolist()[0]
+            if len(pred) >= len(seq):
+                x = [[x] for x in pred]
+                new_seq = x[-len(seq):]
+            else:
+                new_seq = seq[:(len(seq) - len(pred))]
+                x = [[x] for x in pred]
+                new_seq.extend(x)
+        else:
+            new_seq = seq.cpu().numpy().tolist()[0]
+        # print(new_seq)
+        new_seq = [new_seq]
+        new_seq = torch.FloatTensor(new_seq)
+        new_seq = MyDataset(new_seq)
+        new_seq = DataLoader(dataset=new_seq, batch_size=1, shuffle=False, num_workers=0)
+        # print(new_seq)
+        new_seq = [x for x in iter(new_seq)][0]
+        # print(new_seq)
+        with torch.no_grad():
+            new_seq = new_seq.to(device)
+            y_pred = model(new_seq)
             y_pred = list(chain.from_iterable(y_pred.data.tolist()))
             pred.extend(y_pred)
 

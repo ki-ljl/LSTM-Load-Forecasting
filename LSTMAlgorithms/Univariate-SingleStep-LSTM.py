@@ -6,7 +6,7 @@
 @Motto：Hungry And Humble
 
 """
-from util import train, test
+from util import train, test, rolling_test
 from args import us_args_parser
 from data_process import setup_seed
 
@@ -17,5 +17,6 @@ LSTM_PATH = '../model/Univariate-SingleStep-LSTM.pkl'
 if __name__ == '__main__':
     args = us_args_parser()
     flag = 'us'
-    train(args, LSTM_PATH, flag)
+    # train(args, LSTM_PATH, flag)
     test(args, LSTM_PATH, flag)
+    # rolling_test(args, LSTM_PATH, flag)
