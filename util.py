@@ -114,7 +114,14 @@ def test(args, path, flag):
     plt.show()
 
 
-def rolling_test(args, path, flag):
+def us_rolling_test(args, path, flag):
+    """
+    Univariate-SingleStep Rolling Predicting
+    :param args:
+    :param path:
+    :param flag:
+    :return:
+    """
     if flag == 'us':
         Dtr, Dte, m, n = nn_seq(B=args.batch_size)
     elif flag == 'ms':

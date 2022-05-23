@@ -5,10 +5,12 @@
 @File：Multivariate-MultiStep-LSTM.py
 @Motto：Hungry And Humble
 """
+import os
 from args import mm_args_parser
 from util import train, test
 
-LSTM_PATH = '../model/Multivariate-MultiStep_LSTM.pkl'
+path = os.path.abspath(os.path.dirname(os.getcwd()))
+LSTM_PATH = path + '/model/Multivariate-MultiStep_LSTM.pkl'
 
 
 if __name__ == '__main__':
