@@ -23,7 +23,7 @@ def mm_args_parser():
     parser.add_argument('--optimizer', type=str, default='adam', help='type of optimizer')
     parser.add_argument('--device', default=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
-    parser.add_argument('--bidirectional', type=bool, default=True, help='LSTM direction')
+    parser.add_argument('--bidirectional', type=bool, default=False, help='LSTM direction')
     parser.add_argument('--step_size', type=int, default=5, help='step size')
     parser.add_argument('--gamma', type=float, default=0.5, help='gamma')
 

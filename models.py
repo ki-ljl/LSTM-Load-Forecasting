@@ -34,10 +34,10 @@ class LSTM(nn.Module):
         output, _ = self.lstm(input_seq, (h_0, c_0))
         # print('output.size=', output.size())
         # print(self.batch_size * seq_len, self.hidden_size)
-        output = output.contiguous().view(batch_size * seq_len, self.hidden_size)  # (5 * 30, 64)
-        pred = self.linear(output)  # pred()
+        # output = output.contiguous().view(batch_size * seq_len, self.hidden_size)  # (5 * 30, 64)
+        pred = self.linear(output)  # pred(batch_size, seq_len, output_size)
         # print('pred=', pred.shape)
-        pred = pred.view(batch_size, seq_len, -1)
+        # pred = pred.view(batch_size, seq_len, -1)
         pred = pred[:, -1, :]
 
         return pred
@@ -65,10 +65,10 @@ class BiLSTM(nn.Module):
         output, _ = self.lstm(input_seq, (h_0, c_0))
         output = output.contiguous().view(self.batch_size, seq_len, self.num_directions, self.hidden_size)
         output = torch.mean(output, dim=2)
-        output = output.contiguous().view(self.batch_size * seq_len, self.hidden_size)  # (5 * 30, 64)
+        # output = output.contiguous().view(self.batch_size * seq_len, self.hidden_size)  # (5 * 30, 64)
         pred = self.linear(output)  # pred()
         # print('pred=', pred.shape)
-        pred = pred.view(self.batch_size, seq_len, -1)
+        # pred = pred.view(self.batch_size, seq_len, -1)
         pred = pred[:, -1, :]
 
         return pred

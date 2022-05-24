@@ -167,6 +167,7 @@ def us_rolling_test(args, path, flag):
             new_seq = new_seq.to(device)
             y_pred = model(new_seq)
             y_pred = list(chain.from_iterable(y_pred.data.tolist()))
+            # print(y_pred)
             pred.extend(y_pred)
 
     y, pred = np.array(y), np.array(pred)
@@ -174,9 +175,9 @@ def us_rolling_test(args, path, flag):
     pred = (m - n) * pred + n
     print('mape:', get_mape(y, pred))
     # plot
-    x = [i for i in range(1, 151)]
-    x_smooth = np.linspace(np.min(x), np.max(x), 900)
-    y_smooth = make_interp_spline(x, y[150:300])(x_smooth)
+    x = [i for i in range(1, 24 + 1)]
+    x_smooth = np.linspace(np.min(x), np.max(x), 500)
+    y_smooth = make_interp_spline(x, y[0:24])(x_smooth)
     plt.plot(x_smooth, y_smooth, c='green', marker='*', ms=1, alpha=0.75, label='true')
 
     y_smooth = make_interp_spline(x, pred[150:300])(x_smooth)
