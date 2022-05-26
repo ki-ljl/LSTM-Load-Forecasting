@@ -33,11 +33,11 @@ def load_data():
     df = pd.read_csv(path, encoding='gbk')
     columns = df.columns
     df.fillna(df.mean(), inplace=True)
-    MAX = np.max(df[columns[1]])
-    MIN = np.min(df[columns[1]])
-    df[columns[1]] = (df[columns[1]] - MIN) / (MAX - MIN)
+    # MAX = np.max(df[columns[1]])
+    # MIN = np.min(df[columns[1]])
+    # df[columns[1]] = (df[columns[1]] - MIN) / (MAX - MIN)
 
-    return df, MAX, MIN
+    return df
 
 
 class MyDataset(Dataset):
@@ -54,122 +54,125 @@ class MyDataset(Dataset):
 # Multivariate-MultiStep-LSTM data processing.
 def nn_seq_mm(B, num):
     print('data processing...')
-    data, m, n = load_data()
-    load = data[data.columns[1]]
-    load = load.tolist()
-    data = data.values.tolist()
-    seq = []
+    dataset = load_data()
+    # split
+    train = dataset[:int(len(dataset) * 0.7)]
+    test = dataset[int(len(dataset) * 0.7):len(dataset)]
 
-    for i in range(0, len(data) - 24 - num, num):
-        train_seq = []
-        train_label = []
+    def process(data, batch_size):
+        load = data[data.columns[1]]
+        load = load.tolist()
+        data = data.values.tolist()
+        m, n = np.max(load), np.min(load)
+        load = (load - n) / (m - n)
+        seq = []
+        for i in range(0, len(data) - 24 - num, num):
+            train_seq = []
+            train_label = []
 
-        for j in range(i, i + 24):
-            x = [load[j]]
-            for c in range(2, 8):
-                x.append(data[j][c])
-            train_seq.append(x)
+            for j in range(i, i + 24):
+                x = [load[j]]
+                for c in range(2, 8):
+                    x.append(data[j][c])
+                train_seq.append(x)
 
-        for j in range(i + 24, i + 24 + num):
-            train_label.append(load[j])
+            for j in range(i + 24, i + 24 + num):
+                train_label.append(load[j])
 
-        train_seq = torch.FloatTensor(train_seq)
-        train_label = torch.FloatTensor(train_label).view(-1)
-        seq.append((train_seq, train_label))
+            train_seq = torch.FloatTensor(train_seq)
+            train_label = torch.FloatTensor(train_label).view(-1)
+            seq.append((train_seq, train_label))
 
-    # print(seq[-1])
-    Dtr = seq[0:int(len(seq) * 0.7)]
-    Dte = seq[int(len(seq) * 0.7):len(seq)]
+        # print(seq[-1])
+        seq = MyDataset(seq)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-    train_len = int(len(Dtr) / B) * B
-    test_len = int(len(Dte) / B) * B
-    Dtr, Dte = Dtr[:train_len], Dte[:test_len]
+        return seq, [m, n]
 
-    train = MyDataset(Dtr)
-    test = MyDataset(Dte)
-    Dtr = DataLoader(dataset=train, batch_size=B, shuffle=False, num_workers=0)
-    Dte = DataLoader(dataset=test, batch_size=B, shuffle=False, num_workers=0)
+    Dtr, lis1 = process(train, B)
+    Dte, lis2 = process(test, B)
 
-    return Dtr, Dte, m, n
+    return Dtr, Dte, lis1, lis2
 
 
 # Multivariate-SingleStep-LSTM data processing.
 def nn_seq_ms(B):
     print('data processing...')
-    data, m, n = load_data()
-    load = data[data.columns[1]]
-    load = load.tolist()
-    data = data.values.tolist()
-    seq = []
-    for i in range(len(data) - 24):
-        train_seq = []
-        train_label = []
-        for j in range(i, i + 24):
-            x = [load[j]]
-            for c in range(2, 8):
-                x.append(data[j][c])
-            train_seq.append(x)
-        train_label.append(load[i + 24])
-        train_seq = torch.FloatTensor(train_seq)
-        train_label = torch.FloatTensor(train_label).view(-1)
-        seq.append((train_seq, train_label))
+    dataset = load_data()
+    # split
+    train = dataset[:int(len(dataset) * 0.7)]
+    test = dataset[int(len(dataset) * 0.7):len(dataset)]
 
-    Dtr = seq[0:int(len(seq) * 0.7)]
-    Dte = seq[int(len(seq) * 0.7):len(seq)]
+    def process(data, batch_size):
+        load = data[data.columns[1]]
+        load = load.tolist()
+        data = data.values.tolist()
+        m, n = np.max(load), np.min(load)
+        load = (load - n) / (m - n)
+        seq = []
+        for i in range(len(data) - 24):
+            train_seq = []
+            train_label = []
+            for j in range(i, i + 24):
+                x = [load[j]]
+                for c in range(2, 8):
+                    x.append(data[j][c])
+                train_seq.append(x)
+            train_label.append(load[i + 24])
+            train_seq = torch.FloatTensor(train_seq)
+            train_label = torch.FloatTensor(train_label).view(-1)
+            seq.append((train_seq, train_label))
 
-    train_len = int(len(Dtr) / B) * B
-    test_len = int(len(Dte) / B) * B
-    Dtr, Dte = Dtr[:train_len], Dte[:test_len]
+        # print(seq[-1])
+        seq = MyDataset(seq)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-    train = MyDataset(Dtr)
-    test = MyDataset(Dte)
+        return seq, [m, n]
 
-    Dtr = DataLoader(dataset=train, batch_size=B, shuffle=False, num_workers=0)
-    Dte = DataLoader(dataset=test, batch_size=B, shuffle=False, num_workers=0)
+    Dtr, lis1 = process(train, B)
+    Dte, lis2 = process(test, B)
 
-    return Dtr, Dte, m, n
+    return Dtr, Dte, lis1, lis2
 
 
 # Univariate-SingleStep-LSTM data processing.
-def nn_seq(B):
+def nn_seq_us(B):
     print('data processing...')
-    data, m, n = load_data()
-    load = data[data.columns[1]]
-    load = load.tolist()
-    load = torch.FloatTensor(load).view(-1)
-    data = data.values.tolist()
-    seq = []
-    for i in range(len(data) - 24):
-        train_seq = []
-        train_label = []
-        for j in range(i, i + 24):
-            x = [load[j]]
-            train_seq.append(x)
-        # for c in range(2, 8):
-        #     train_seq.append(data[i + 24][c])
-        train_label.append(load[i + 24])
-        train_seq = torch.FloatTensor(train_seq)
-        train_label = torch.FloatTensor(train_label).view(-1)
-        seq.append((train_seq, train_label))
-    # print(seq[:5])
+    dataset = load_data()
+    # split
+    train = dataset[:int(len(dataset) * 0.7)]
+    test = dataset[int(len(dataset) * 0.7):len(dataset)]
 
-    Dtr = seq[0:int(len(seq) * 0.7)]
-    Dte = seq[int(len(seq) * 0.7):len(seq)]
+    def process(data, batch_size):
+        load = data[data.columns[1]]
+        load = load.tolist()
+        data = data.values.tolist()
+        m, n = np.max(load), np.min(load)
+        load = (load - n) / (m - n)
+        seq = []
+        for i in range(len(data) - 24):
+            train_seq = []
+            train_label = []
+            for j in range(i, i + 24):
+                x = [load[j]]
+                train_seq.append(x)
+            # for c in range(2, 8):
+            #     train_seq.append(data[i + 24][c])
+            train_label.append(load[i + 24])
+            train_seq = torch.FloatTensor(train_seq)
+            train_label = torch.FloatTensor(train_label).view(-1)
+            seq.append((train_seq, train_label))
 
-    train_len = int(len(Dtr) / B) * B
-    test_len = int(len(Dte) / B) * B
-    Dtr, Dte = Dtr[:train_len], Dte[:test_len]
+        # print(seq[-1])
+        seq = MyDataset(seq)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-    train = MyDataset(Dtr)
-    test = MyDataset(Dte)
+        return seq, [m, n]
 
-    Dtr = DataLoader(dataset=train, batch_size=B, shuffle=False, num_workers=0)
-    Dte = DataLoader(dataset=test, batch_size=1, shuffle=False, num_workers=0)
+    Dtr, lis1 = process(train, B)
+    Dte, lis2 = process(test, B)
 
-    # x = [x for x in iter(Dtr)][0]
-    # print(x)
-
-    return Dtr, Dte, m, n
+    return Dtr, Dte, lis1, lis2
 
 
 def get_mape(x, y):

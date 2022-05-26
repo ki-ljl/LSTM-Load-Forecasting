@@ -6,7 +6,7 @@
 @Motto：Hungry And Humble
 
 """
-from util import train, test, us_rolling_test
+from util import train, test
 from args import us_args_parser
 from data_process import setup_seed
 import os
@@ -21,4 +21,3 @@ if __name__ == '__main__':
     flag = 'us'
     train(args, LSTM_PATH, flag)
     test(args, LSTM_PATH, flag)
-    # us_rolling_test(args, LSTM_PATH, flag)
