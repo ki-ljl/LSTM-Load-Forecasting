@@ -27,15 +27,12 @@ def setup_seed(seed):
 
 def load_data():
     """
-    :return: normalized dataframe
+    :return:
     """
     path = os.path.dirname(os.path.realpath(__file__)) + '/data/data.csv'
     df = pd.read_csv(path, encoding='gbk')
     columns = df.columns
     df.fillna(df.mean(), inplace=True)
-    # MAX = np.max(df[columns[1]])
-    # MIN = np.min(df[columns[1]])
-    # df[columns[1]] = (df[columns[1]] - MIN) / (MAX - MIN)
 
     return df
 

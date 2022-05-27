@@ -57,8 +57,8 @@ class BiLSTM(nn.Module):
 
     def forward(self, input_seq):
         batch_size, seq_len = input_seq.shape[0], input_seq.shape[1]
-        h_0 = torch.randn(self.num_directions * self.num_layers, self.batch_size, self.hidden_size).to(device)
-        c_0 = torch.randn(self.num_directions * self.num_layers, self.batch_size, self.hidden_size).to(device)
+        h_0 = torch.randn(self.num_directions * self.num_layers, batch_size, self.hidden_size).to(device)
+        c_0 = torch.randn(self.num_directions * self.num_layers, batch_size, self.hidden_size).to(device)
         # print(input_seq.size())
         # input(batch_size, seq_len, input_size)
         # output(batch_size, seq_len, num_directions * hidden_size)
