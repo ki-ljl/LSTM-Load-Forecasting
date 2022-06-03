@@ -5,6 +5,13 @@
 @File：util.py
 @Motto：Hungry And Humble
 """
+import os
+import sys
+
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(rootPath)
+
 from itertools import chain
 
 import torch
@@ -69,7 +76,7 @@ def train(args, path, flag):
 
         scheduler.step()
 
-    state = {'model': model.state_dict(), 'optimizer': optimizer.state_dict()}
+    state = {'models': model.state_dict(), 'optimizer': optimizer.state_dict()}
     torch.save(state, path)
 
 
@@ -77,15 +84,15 @@ def test(args, path, flag):
     Dtr, Dte, lis1, lis2 = load_data(args, flag, args.batch_size)
     pred = []
     y = []
-    print('loading model...')
+    print('loading models...')
     input_size, hidden_size, num_layers = args.input_size, args.hidden_size, args.num_layers
     output_size = args.output_size
     if args.bidirectional:
         model = BiLSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
     else:
         model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
-    # model = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
-    model.load_state_dict(torch.load(path)['model'])
+    # models = LSTM(input_size, hidden_size, num_layers, output_size, batch_size=args.batch_size).to(device)
+    model.load_state_dict(torch.load(path)['models'])
     model.eval()
     print('predicting...')
     for (seq, target) in tqdm(Dte):
