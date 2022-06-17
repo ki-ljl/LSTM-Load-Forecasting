@@ -53,14 +53,15 @@ def nn_seq_mm(B, num):
     print('data processing...')
     dataset = load_data()
     # split
-    train = dataset[:int(len(dataset) * 0.7)]
-    test = dataset[int(len(dataset) * 0.7):len(dataset)]
+    train = dataset[:int(len(dataset) * 0.6)]
+    val = dataset[int(len(dataset) * 0.6):int(len(dataset) * 0.8)]
+    test = dataset[int(len(dataset) * 0.8):len(dataset)]
+    m, n = np.max(train[train.columns[1]]), np.min(train[train.columns[1]])
 
     def process(data, batch_size):
         load = data[data.columns[1]]
         load = load.tolist()
         data = data.values.tolist()
-        m, n = np.max(load), np.min(load)
         load = (load - n) / (m - n)
         seq = []
         for i in range(0, len(data) - 24 - num, num):
@@ -84,12 +85,13 @@ def nn_seq_mm(B, num):
         seq = MyDataset(seq)
         seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-        return seq, [m, n]
+        return seq
 
-    Dtr, lis1 = process(train, B)
-    Dte, lis2 = process(test, B)
+    Dtr = process(train, B)
+    Val = process(val, B)
+    Dte = process(test, B)
 
-    return Dtr, Dte, lis1, lis2
+    return Dtr, Val, Dte, m, n
 
 
 # Multivariate-SingleStep-LSTM data processing.
@@ -97,14 +99,15 @@ def nn_seq_ms(B):
     print('data processing...')
     dataset = load_data()
     # split
-    train = dataset[:int(len(dataset) * 0.7)]
-    test = dataset[int(len(dataset) * 0.7):len(dataset)]
+    train = dataset[:int(len(dataset) * 0.6)]
+    val = dataset[int(len(dataset) * 0.6):int(len(dataset) * 0.8)]
+    test = dataset[int(len(dataset) * 0.8):len(dataset)]
+    m, n = np.max(train[train.columns[1]]), np.min(train[train.columns[1]])
 
     def process(data, batch_size):
         load = data[data.columns[1]]
         load = load.tolist()
         data = data.values.tolist()
-        m, n = np.max(load), np.min(load)
         load = (load - n) / (m - n)
         seq = []
         for i in range(len(data) - 24):
@@ -124,12 +127,13 @@ def nn_seq_ms(B):
         seq = MyDataset(seq)
         seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-        return seq, [m, n]
+        return seq
 
-    Dtr, lis1 = process(train, B)
-    Dte, lis2 = process(test, B)
+    Dtr = process(train, B)
+    Val = process(val, B)
+    Dte = process(test, B)
 
-    return Dtr, Dte, lis1, lis2
+    return Dtr, Val, Dte, m, n
 
 
 # Univariate-SingleStep-LSTM data processing.
@@ -137,14 +141,15 @@ def nn_seq_us(B):
     print('data processing...')
     dataset = load_data()
     # split
-    train = dataset[:int(len(dataset) * 0.7)]
-    test = dataset[int(len(dataset) * 0.7):len(dataset)]
+    train = dataset[:int(len(dataset) * 0.6)]
+    val = dataset[int(len(dataset) * 0.6):int(len(dataset) * 0.8)]
+    test = dataset[int(len(dataset) * 0.8):len(dataset)]
+    m, n = np.max(train[train.columns[1]]), np.min(train[train.columns[1]])
 
     def process(data, batch_size):
         load = data[data.columns[1]]
         load = load.tolist()
         data = data.values.tolist()
-        m, n = np.max(load), np.min(load)
         load = (load - n) / (m - n)
         seq = []
         for i in range(len(data) - 24):
@@ -164,12 +169,13 @@ def nn_seq_us(B):
         seq = MyDataset(seq)
         seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
 
-        return seq, [m, n]
+        return seq
 
-    Dtr, lis1 = process(train, B)
-    Dte, lis2 = process(test, B)
+    Dtr = process(train, B)
+    Val = process(val, B)
+    Dte = process(test, B)
 
-    return Dtr, Dte, lis1, lis2
+    return Dtr, Val, Dte, m, n
 
 
 def get_mape(x, y):

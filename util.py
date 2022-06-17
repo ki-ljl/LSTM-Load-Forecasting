@@ -5,6 +5,7 @@
 @File：util.py
 @Motto：Hungry And Humble
 """
+import copy
 import os
 import sys
 
@@ -29,19 +30,33 @@ from torch.optim.lr_scheduler import StepLR
 setup_seed(20)
 
 
-def load_data(args, flag, batch_size):
+def load_data(args, flag):
     if flag == 'us':
-        Dtr, Dte, lis1, lis2 = nn_seq_us(B=batch_size)
+        Dtr, Val, Dte, m, n = nn_seq_us(B=args.batch_size)
     elif flag == 'ms':
-        Dtr, Dte, lis1, lis2 = nn_seq_ms(B=batch_size)
+        Dtr, Val, Dte, m, n = nn_seq_ms(B=args.batch_size)
     else:
-        Dtr, Dte, lis1, lis2 = nn_seq_mm(B=batch_size, num=args.output_size)
+        Dtr, Val, Dte, m, n = nn_seq_mm(B=args.batch_size, num=args.output_size)
 
-    return Dtr, Dte, lis1, lis2
+    return Dtr, Val, Dte, m, n
 
 
-def train(args, path, flag):
-    Dtr, Dte, lis1, lis2 = load_data(args, flag, args.batch_size)
+def get_val_loss(args, model, Val):
+    model.eval()
+    loss_function = nn.MSELoss().to(args.device)
+    val_loss = []
+    for (seq, label) in Val:
+        with torch.no_grad():
+            seq = seq.to(args.device)
+            label = label.to(args.device)
+            y_pred = model(seq)
+            loss = loss_function(y_pred, label)
+            val_loss.append(loss.item())
+
+    return np.mean(val_loss)
+
+
+def train(args, Dtr, Val, path):
     input_size, hidden_size, num_layers = args.input_size, args.hidden_size, args.num_layers
     output_size = args.output_size
     if args.bidirectional:
@@ -58,30 +73,36 @@ def train(args, path, flag):
                                     momentum=0.9, weight_decay=args.weight_decay)
     scheduler = StepLR(optimizer, step_size=args.step_size, gamma=args.gamma)
     # training
-    loss = 0
-    for i in tqdm(range(args.epochs)):
-        cnt = 0
+    min_epochs = 10
+    best_model = None
+    min_val_loss = 5
+    for epoch in tqdm(range(args.epochs)):
+        train_loss = []
         for (seq, label) in Dtr:
-            cnt += 1
             seq = seq.to(device)
             label = label.to(device)
             y_pred = model(seq)
             loss = loss_function(y_pred, label)
+            train_loss.append(loss.item())
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            # if cnt % 100 == 0:
-            #     print('epoch', i, ':', cnt - 100, '~', cnt, loss.item())
-        print('epoch', i, ':', loss.item())
 
         scheduler.step()
+        # validation
+        val_loss = get_val_loss(args, model, Val)
+        if epoch > min_epochs and val_loss < min_val_loss:
+            min_val_loss = val_loss
+            best_model = copy.deepcopy(model)
 
-    state = {'models': model.state_dict(), 'optimizer': optimizer.state_dict()}
+        print('epoch {:03d} train_loss {:.8f} val_loss {:.8f}'.format(epoch, np.mean(train_loss), val_loss))
+        model.train()
+
+    state = {'models': best_model.state_dict()}
     torch.save(state, path)
 
 
-def test(args, path, flag):
-    Dtr, Dte, lis1, lis2 = load_data(args, flag, args.batch_size)
+def test(args, Dte, path, m, n):
     pred = []
     y = []
     print('loading models...')
@@ -105,7 +126,6 @@ def test(args, path, flag):
             pred.extend(y_pred)
 
     y, pred = np.array(y), np.array(pred)
-    m, n = lis2[0], lis2[1]
     y = (m - n) * y + n
     pred = (m - n) * pred + n
     print('mape:', get_mape(y, pred))
