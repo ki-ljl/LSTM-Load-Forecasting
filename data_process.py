@@ -31,7 +31,6 @@ def load_data():
     """
     path = os.path.dirname(os.path.realpath(__file__)) + '/data/data.csv'
     df = pd.read_csv(path, encoding='gbk')
-    columns = df.columns
     df.fillna(df.mean(), inplace=True)
 
     return df
@@ -60,9 +59,9 @@ def nn_seq_mm(B, num):
 
     def process(data, batch_size):
         load = data[data.columns[1]]
-        load = load.tolist()
         data = data.values.tolist()
         load = (load - n) / (m - n)
+        load = load.tolist()
         seq = []
         for i in range(0, len(data) - 24 - num, num):
             train_seq = []
@@ -106,9 +105,9 @@ def nn_seq_ms(B):
 
     def process(data, batch_size):
         load = data[data.columns[1]]
-        load = load.tolist()
         data = data.values.tolist()
         load = (load - n) / (m - n)
+        load = load.tolist()
         seq = []
         for i in range(len(data) - 24):
             train_seq = []
@@ -148,9 +147,9 @@ def nn_seq_us(B):
 
     def process(data, batch_size):
         load = data[data.columns[1]]
-        load = load.tolist()
         data = data.values.tolist()
         load = (load - n) / (m - n)
+        load = load.tolist()
         seq = []
         for i in range(len(data) - 24):
             train_seq = []
