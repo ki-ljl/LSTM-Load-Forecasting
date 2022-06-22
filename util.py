@@ -32,11 +32,11 @@ setup_seed(20)
 
 def load_data(args, flag):
     if flag == 'us':
-        Dtr, Val, Dte, m, n = nn_seq_us(B=args.batch_size)
+        Dtr, Val, Dte, m, n = nn_seq_us(seq_len=args.seq_len, B=args.batch_size)
     elif flag == 'ms':
-        Dtr, Val, Dte, m, n = nn_seq_ms(B=args.batch_size)
+        Dtr, Val, Dte, m, n = nn_seq_ms(seq_len=args.seq_len, B=args.batch_size)
     else:
-        Dtr, Val, Dte, m, n = nn_seq_mm(B=args.batch_size, num=args.output_size)
+        Dtr, Val, Dte, m, n = nn_seq_mm(seq_len=args.seq_len, B=args.batch_size, num=args.output_size)
 
     return Dtr, Val, Dte, m, n
 
@@ -91,7 +91,7 @@ def train(args, Dtr, Val, path):
         scheduler.step()
         # validation
         val_loss = get_val_loss(args, model, Val)
-        if epoch > min_epochs and val_loss < min_val_loss:
+        if epoch + 1 >= min_epochs and val_loss < min_val_loss:
             min_val_loss = val_loss
             best_model = copy.deepcopy(model)
 

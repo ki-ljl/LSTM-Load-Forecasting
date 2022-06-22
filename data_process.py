@@ -48,7 +48,7 @@ class MyDataset(Dataset):
 
 
 # Multivariate-MultiStep-LSTM data processing.
-def nn_seq_mm(B, num):
+def nn_seq_mm(seq_len, B, num):
     print('data processing...')
     dataset = load_data()
     # split
@@ -57,23 +57,23 @@ def nn_seq_mm(B, num):
     test = dataset[int(len(dataset) * 0.8):len(dataset)]
     m, n = np.max(train[train.columns[1]]), np.min(train[train.columns[1]])
 
-    def process(data, batch_size):
+    def process(data, batch_size, step_size):
         load = data[data.columns[1]]
         data = data.values.tolist()
         load = (load - n) / (m - n)
         load = load.tolist()
         seq = []
-        for i in range(0, len(data) - 24 - num, num):
+        for i in range(0, len(data) - seq_len - num, step_size):
             train_seq = []
             train_label = []
 
-            for j in range(i, i + 24):
+            for j in range(i, i + seq_len):
                 x = [load[j]]
                 for c in range(2, 8):
                     x.append(data[j][c])
                 train_seq.append(x)
 
-            for j in range(i + 24, i + 24 + num):
+            for j in range(i + seq_len, i + seq_len + num):
                 train_label.append(load[j])
 
             train_seq = torch.FloatTensor(train_seq)
@@ -82,19 +82,19 @@ def nn_seq_mm(B, num):
 
         # print(seq[-1])
         seq = MyDataset(seq)
-        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=False)
 
         return seq
 
-    Dtr = process(train, B)
-    Val = process(val, B)
-    Dte = process(test, B)
+    Dtr = process(train, B, step_size=1)
+    Val = process(val, B, step_size=1)
+    Dte = process(test, B, step_size=num)
 
     return Dtr, Val, Dte, m, n
 
 
 # Multivariate-SingleStep-LSTM data processing.
-def nn_seq_ms(B):
+def nn_seq_ms(seq_len, B):
     print('data processing...')
     dataset = load_data()
     # split
@@ -109,22 +109,22 @@ def nn_seq_ms(B):
         load = (load - n) / (m - n)
         load = load.tolist()
         seq = []
-        for i in range(len(data) - 24):
+        for i in range(len(data) - seq_len):
             train_seq = []
             train_label = []
-            for j in range(i, i + 24):
+            for j in range(i, i + seq_len):
                 x = [load[j]]
                 for c in range(2, 8):
                     x.append(data[j][c])
                 train_seq.append(x)
-            train_label.append(load[i + 24])
+            train_label.append(load[i + seq_len])
             train_seq = torch.FloatTensor(train_seq)
             train_label = torch.FloatTensor(train_label).view(-1)
             seq.append((train_seq, train_label))
 
         # print(seq[-1])
         seq = MyDataset(seq)
-        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=False)
 
         return seq
 
@@ -136,7 +136,7 @@ def nn_seq_ms(B):
 
 
 # Univariate-SingleStep-LSTM data processing.
-def nn_seq_us(B):
+def nn_seq_us(seq_len, B):
     print('data processing...')
     dataset = load_data()
     # split
@@ -151,22 +151,22 @@ def nn_seq_us(B):
         load = (load - n) / (m - n)
         load = load.tolist()
         seq = []
-        for i in range(len(data) - 24):
+        for i in range(len(data) - seq_len):
             train_seq = []
             train_label = []
-            for j in range(i, i + 24):
+            for j in range(i, i + seq_len):
                 x = [load[j]]
                 train_seq.append(x)
             # for c in range(2, 8):
             #     train_seq.append(data[i + 24][c])
-            train_label.append(load[i + 24])
+            train_label.append(load[i + seq_len])
             train_seq = torch.FloatTensor(train_seq)
             train_label = torch.FloatTensor(train_label).view(-1)
             seq.append((train_seq, train_label))
 
         # print(seq[-1])
         seq = MyDataset(seq)
-        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=True)
+        seq = DataLoader(dataset=seq, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=False)
 
         return seq
 

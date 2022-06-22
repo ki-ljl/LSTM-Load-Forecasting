@@ -15,6 +15,7 @@ def mm_args_parser():
 
     parser.add_argument('--epochs', type=int, default=50, help='input dimension')
     parser.add_argument('--input_size', type=int, default=7, help='input dimension')
+    parser.add_argument('--seq_len', type=int, default=24, help='seq len')
     parser.add_argument('--output_size', type=int, default=4, help='output dimension')
     parser.add_argument('--hidden_size', type=int, default=64, help='hidden size')
     parser.add_argument('--num_layers', type=int, default=1, help='num layers')
@@ -38,6 +39,7 @@ def ms_args_parser():
 
     parser.add_argument('--epochs', type=int, default=30, help='input dimension')
     parser.add_argument('--input_size', type=int, default=7, help='input dimension')
+    parser.add_argument('--seq_len', type=int, default=24, help='seq len')
     parser.add_argument('--output_size', type=int, default=1, help='output dimension')
     parser.add_argument('--hidden_size', type=int, default=64, help='hidden size')
     parser.add_argument('--num_layers', type=int, default=1, help='num layers')
@@ -61,6 +63,7 @@ def us_args_parser():
 
     parser.add_argument('--epochs', type=int, default=30, help='input dimension')
     parser.add_argument('--input_size', type=int, default=1, help='input dimension')
+    parser.add_argument('--seq_len', type=int, default=24, help='seq len')
     parser.add_argument('--output_size', type=int, default=1, help='output dimension')
     parser.add_argument('--hidden_size', type=int, default=32, help='hidden size')
     parser.add_argument('--num_layers', type=int, default=2, help='num layers')
